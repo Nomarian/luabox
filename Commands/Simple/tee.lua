@@ -1,4 +1,4 @@
-#!/home/lan/Run/CUI/lua
+#!/usr/bin/env lua
 
 -- tee.lua [-mode files]
 -- saves input to files
