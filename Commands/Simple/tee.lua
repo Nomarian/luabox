@@ -4,6 +4,13 @@
 -- saves input to files
 -- writes to standard output
 
+function writetofiles(files,str)
+ io.write(str)
+ for i,f in ipairs(files) do
+  f:write(str)
+ end
+end
+
 do
  local iarg = 1
  local modematch = "[wa]%+?b?"
@@ -13,6 +20,10 @@ do
   mode = string.match(arg[1],"^%-(" .. modematch .. ")$")
  end
 
+-- open the files WHEN you get input
+ local line = io.input():read("L")
+ if not line then os.exit(0) end
+ 
  files = {}
  local f
  for i=iarg,#arg do
@@ -23,12 +34,11 @@ do
    files[1+#files] = f
   end
  end
+ 
+ writetofiles(files,line)
+ 
 end
 
 for line in io.input():lines("L") do
- io.write(line)
- for i,f in ipairs(files) do
-  f:write(line)
-  -- f:flush()
- end
+ writetofiles(files,line)
 end
