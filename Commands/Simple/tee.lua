@@ -22,7 +22,6 @@ do
 
 -- open the files WHEN you get input
  local line = io.input():read("L")
- if not line then os.exit(0) end
  
  files = {}
  local f
@@ -35,6 +34,7 @@ do
   end
  end
  
+ if not line then os.exit(0) end
  writetofiles(files,line)
  
 end
