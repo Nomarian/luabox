@@ -1,25 +1,33 @@
 #!/usr/bin/env lua
 
-b=os.time()
-
 function usage()
- print("time prog [args]")
+ io.stderr:write("time prog [args]\n")
+ os.exit(0)
 end
 
+b=os.time()
+
+function sanitize(str)
+ return str:gsub(
+  [[\]],[[\\]]
+ ):gsub(
+  '"','\\"'
+ )
+end
+
+args = ""
 if #arg==0 then
  usage()
 elseif #arg>1 then
 
- args = ""
  for i=2,#arg do
-  args = args .. '"' .. arg[i] .. '" '
+  args = args .. ' "' .. sanitize(arg[i]) .. '"'
  end
- args = string.sub(args,1,#args-1)
  
 end
 cmd = arg[1]
 
-os.execute(cmd .. " " .. args)
+e,sig = os.execute(cmd .. args)
 
 OFS="\t"
 
@@ -30,3 +38,4 @@ io.stderr:write(
  )
  .. "\n"
 )
+os.exit(e)
