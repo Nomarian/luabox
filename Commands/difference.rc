@@ -1,0 +1,14 @@
+#!/usr/bin/rc
+
+fn basename {if(~ $#* 2){ifs=$($#*) *=`{echo -n $*} {echo $1}}else {ifs=/ {*=`{echo $^*};echo -n $($#*)}}}
+
+fn which {a=$* for (* in $path/*) {~ $* */$a && echo $*} }
+
+for (f in *.lua){
+ *=`{ basename $f . }
+ if (whatis $* > /dev/null >[2=1]) {
+ echo $f
+  du --apparent-size -h -L $f `{which $1} | awk '{printf("\t%s\n",$0)}'
+  echo
+ }
+}

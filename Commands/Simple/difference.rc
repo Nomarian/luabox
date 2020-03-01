@@ -1,0 +1,13 @@
+#!/usr/bin/rc
+
+fn basename {if(~ $#* 2){ifs=$($#*) *=`{echo -n $*} {echo $1}}else {ifs=/ {*=`{echo $^*};echo -n $($#*)}}}
+
+for (f in *.lua){
+ *=`{ basename $f . }
+ *=$1
+ if (whatis $* > /dev/null >[2=1]) {
+  x2=`{ du -hL `{which $*} }
+  x1=`{ du -b $f }
+  echo $f '	is' $x1(1) vs $x2(1)
+ }
+}
