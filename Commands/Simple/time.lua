@@ -7,21 +7,13 @@ end
 
 b=os.time()
 
-function sanitize(str)
- return str:gsub(
-  [[\]],[[\\]]
- ):gsub(
-  '"','\\"'
- )
-end
-
 args = ""
 if #arg==0 then
  usage()
 elseif #arg>1 then
 
  for i=2,#arg do
-  args = args .. ' "' .. sanitize(arg[i]) .. '"'
+  args = args .. ' ' .. string.format("%q",arg[i])
  end
  
 end
