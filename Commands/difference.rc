@@ -12,3 +12,5 @@ for (f in *.lua){
   echo
  }
 }
+
+# this can be du $files | awk '' to speed up, but so far its fast enough
