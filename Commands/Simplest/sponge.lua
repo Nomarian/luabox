@@ -1,4 +1,4 @@
-#!/home/lan/Run/CUI/lua
+#!/usr/bin/env lua
  
 -- sponge.lua [tmpfile]
 -- soaks up input from a pipe until it reaches EOF

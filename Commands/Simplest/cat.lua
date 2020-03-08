@@ -1,4 +1,4 @@
-#!/home/lan/Run/CUI/lua
+#!/usr/bin/env lua
 
 -- bufsize 8192
 function cat(file,bufsize)

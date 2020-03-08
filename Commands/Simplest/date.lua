@@ -1,3 +1,3 @@
-#!/home/lan/Run/CUI/lua
+#!/usr/bin/env lua
 
 print(os.date(arg[1]))
