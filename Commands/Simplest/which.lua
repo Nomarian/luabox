@@ -1,65 +1,44 @@
 #!/usr/bin/env lua
 
--- Synopsis basically tests if args exist in $path
--- BUG doesn't care about permissions
-
--- -a returns all files
--- it exits 0 if it finds all args in path
--- exits 1 if it found some
--- exits 2 for no args
-
-
--- returns true/false if file is exists
-function test(file)
- local f = io.open(file)
- if f then
-  io.close(f)
-  print(file)
-  return true
- end
- return false
+function usage()
+ print("which file [files] && found ||1 found some ||2 nothing found ||3 this msg")
+ print("prints all files found in $path")
+ print("NOTE: does not care about permissions") -- BUG
+ os.exit(3)
 end
 
--- returns true if it finds file in path
-function findInPath(file,stop)
+-- true if something found else false
+function which(file)
  local r = false
-
- if stop then -- just one file
-
-  for i,p in ipairs(path) do
-   p = p .. "/" .. file
-   if test(p) then r=true break end
-  end
-
- else
+ local h -- file handle
 
   for i,p in ipairs(path) do
    p = p .. "/" .. file
-   if test(p) then r=true end
+   h = io.open(p)   
+   if h then r=true print(p) io.close(h) end
   end
 
- end
  return r
 end
 
-e=2
-if #arg>0 and not (#arg==1 and arg[1]=="-a") then
+if #arg==0 then usage()
+else
 
  path = {} -- $PATH to path{}
  for p in os.getenv("PATH"):gmatch("[^:]+") do
   path[#path+1] = p
  end
 
- local s,x = 1,true
- if arg[1]=="-a" then
-  s=2
-  x=false
+ e=#arg -- exit
+ for i=1,#arg do -- maybe cleanname or trim /?
+  if which(arg[i]) then e = e - 1 end
  end
- 
- e=0
- for i=s,#arg do
-  if not findInPath(arg[i],x) then e=1 end
- end
-end
-os.exit(e)
 
+ if e>0 then
+  if e==#arg then e=2
+  else e=1 end
+ end
+
+end
+
+os.exit(e)
