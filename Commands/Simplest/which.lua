@@ -15,7 +15,10 @@ function which(file)
   for i,p in ipairs(path) do
    p = p .. "/" .. file
    h = io.open(p)   
-   if h then r=true print(p) io.close(h) end
+   if h then r=true print(p) io.close(h)
+    if stop then break end
+   end
+   
   end
 
  return r
@@ -30,7 +33,12 @@ else
  end
 
  e=#arg -- exit
- for i=1,#arg do -- maybe cleanname or trim /?
+ stop = true
+ local s = 1
+
+ if arg[1]=="-a" then s=2 stop=nil end
+
+ for i=s,#arg do -- maybe cleanname or trim /?
   if which(arg[i]) then e = e - 1 end
  end
 
