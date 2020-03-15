@@ -1,11 +1,17 @@
 #!/usr/bin/env lua
 
---use string.gsub and add a \n at the end of every string
--- if one is at the end o
-
 -- todo, UTF8 support
 strsize = 3
 bufsize = 8192
+
+-- debugging functions I'm afraid of taking out
+function crasher(a) print(a,"Not done") os.exit(1) end
+
+function inspect( s )
+ for x in s:gmatch("%G") do
+  io.write( string.format("%s:%s\n", string.byte(x),x ) )
+ end
+end
 
 function all( f )
  local str = f:read("*a")
@@ -14,7 +20,6 @@ function all( f )
  end
 end
 
-function crasher(a) print(a,"Not done") os.exit(1) end
 
 function buffered( f )
  local roll -- rollover from last buffer read
@@ -48,12 +53,6 @@ function buffered( f )
  
 end
 
-function inspect( s )
- for x in s:gmatch("%G") do
-  io.write( string.format("%s:%s\n", string.byte(x),x ) )
- end
-end
-
 function strings_file( f )
  -- will try to open, get the size, 
  local fsize = f:seek("end")
@@ -74,28 +73,11 @@ else
 
  for i,v in ipairs(arg) do
   f = io.open(v) -- print error for new file?
-  if f then strings_file(f) end -- error if file does not exist?
+
+  if f then
+   strings_file(f)
+  end -- error if file does not exist?
+
  end
 
 end
-
---[[
-
-function blah()
- if f then
-  for line in io.input():lines("L") do
-   f:write(line)
-  end
-  for line in f:lines("L") do
-   io.write(line)
-  end
-  
- else
-  s = io.input():read("a")
-  io.write(s)
-  end
- end
-end
-
-]]
-
