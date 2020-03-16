@@ -8,9 +8,9 @@ end
 
 function clear()
  local esc = string.char( 27 )
- 
- if os.getenv("TERM") then
-  io.write( esc .. "[H" .. esc .. "[J" )
+ local term = os.getenv("TERM")
+ if term then
+  io.write( esc .. "[H" .. esc .. "[2J" )
  else
   print("No $TERM found")
   os.exit(1)
