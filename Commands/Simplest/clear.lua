@@ -7,10 +7,10 @@ function usage()
 end
 
 function clear()
- local esc = string.char( 27 )
+ local esc = "\027"
  local term = os.getenv("TERM")
  if term then
-  io.write( esc .. "[H" .. esc .. "[2J" )
+  io.write( esc,"[H",esc,"[2J" )
  else
   print("No $TERM found")
   os.exit(1)
