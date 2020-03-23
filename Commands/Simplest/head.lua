@@ -104,7 +104,8 @@ elseif #arg==1 then
 else
  local f
  for i,file in ipairs(arg) do
-  if not quiet then print("==> " .. file .. " <==") end
+  if not quiet then io.stderr:write("==> " .. file .. " <==\n") end
+  f = io.open( file )
   if f then head(f) end -- error if file does not exist?
  end
 end
