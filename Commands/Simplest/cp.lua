@@ -1,10 +1,13 @@
 #!/usr/bin/env lua
 
+-- Do we even need tee anymore?
+-- it only offers one advantage, printing to stdout
+
 -- This version just copies data from one to the other
 -- This version reads all the bytes in file1 and writes it to file2
 
 function usage()
- print'cp [+mode] origin-file files'
+ print'cp [+mode] (file or - or /dev/stdin) files'
  print'copies the origin file to files'
  print'modes are [w]rite [a]ppend you can add a b at the end for binary'
  os.exit(0)
@@ -23,11 +26,18 @@ end
 if #arg<2 then
  usage()
 else
- local f = io.open( table.remove(arg,1), readmode )
- if not f then
-  print"Could not open Origin File"
-  os.exit(1)
+ local f = table.remove(arg,1)
+ if f=="-" or f=="/dev/stdin" then
+  f = io.stdin
+ else
+  f = io.open( f, readmode )
+  if not f then
+   print"Could not open origin file"
+   os.exit(1)
+  end
+
  end
+ 
 
  local handles = {}
  for i,file in ipairs(arg) do
