@@ -7,10 +7,6 @@
 
  Environs
 	ORS is also supported
-
- TODO
-	if file doesn't exist, prints in stderr no such file or directory
-	will list all files in arg, it always prints fullpath or arg
 --]]
 
 local lfs = require"lfs"
@@ -31,37 +27,29 @@ do -- get gid and uid
 end
 
 -- should only be used for directories
-local function checkperms(file)
- local attr = lfs.attributes(file)
- return (
+local function checkperms(attr) -- permission to read/execute directory
+ return 
   (attr.uid == id.uid and attr.permissions:match"^r.x") or
   (attr.gid == id.gid and attr.permissions:match"^...r.x") or
   (attr.permissions:match"r.x$")
- )
 end
 
--- broken symbolic links files dont exist
+local function balk(file)
+ local attr,err = lfs.attributes(file) -- broken symbolic links files lead to err
+ if err then io.stderr:write(err .. "\n") return false end
+ io.write(file .. ORS)
+ return attr.mode == "directory" and checkperms(attr)
+end
 
-function walk (path) -- must be a directory
-	if not checkperms(path) then io.stderr:write(path .. ORS) return end
+local function walk (path) -- must be a directory
     for file in lfs.dir(path) do -- gets all the files in path
-        if file ~= "." and file ~= ".." then
-            local f = path .. (path:match"/$" and "" or "/") .. file
-            local attr,err = lfs.attributes(f)
-            if err then io.stderr:write(err .. "\n")
-            else 
-            	io.write(f .. ORS)
-            	if attr.mode == "directory" then walk (f) end
-            end
-        end
+    	if file ~= "." and file ~= ".." then
+	        file = path .. (path:match"/$" and "" or "/") .. file
+    	    if balk(file) then walk(file) end
+    	end
     end
 end
--- permission to read/execute directory
 
 for i,arr in ipairs(arg) do
- if lfs.attributes(arr).mode == "file" then
- 	io.write(arr .. ORS)
- else
-	walk(arr)
- end
+ if balk(arr) then walk(arr) end
 end
