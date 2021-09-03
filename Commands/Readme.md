@@ -6,7 +6,7 @@ Base/Simpler/
  More features than Base
 
 Simple/
- requires dependencies, does not adhere to POSIX, but gets the job done
+ requires dependencies, does not adhere to POSIX, Base but with libraries
 
 Robust/
  links to the most featureful tools.
