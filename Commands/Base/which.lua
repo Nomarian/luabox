@@ -1,52 +1,31 @@
 #!/usr/bin/env lua
 
-function usage()
- print("which file [files] && found ||1 found some ||2 nothing found ||3 this msg")
- print("prints all files found in $path")
- print("NOTE: does not care about permissions") -- BUG
+if #arg==0 then
+ print[[which prog [progs]
+ 
+  prints all files found in $PATH
+  exit 0 if files found
+  exit 1 if no files found
+  exit 2 is this message
+
+  NOTE: does not care about permissions
+ ]]
  os.exit(3)
 end
 
--- true if something found else false
-function which(file)
- local r = false
- local h -- file handle
-
-  for i,p in ipairs(path) do
-   p = p .. "/" .. file
-   h = io.open(p)   
-   if h then r=true print(p) io.close(h)
-    if stop then break end
-   end
-   
-  end
-
- return r
+-- returns true/false if file is readable by user/exists
+local function exists(file)
+ local f = io.open(file)
+ return f and io.close(f)
 end
 
-if #arg==0 then usage()
-else
+local count = 1
 
- path = {} -- $PATH to path{}
- for p in os.getenv("PATH"):gmatch("[^:]+") do
-  path[#path+1] = p
+for directory in os.getenv"PATH":gmatch"([^:]+)" do
+ for i,prog in ipairs(arg) do
+  local file = directory .. "/" .. prog
+  if exists(file) then print(file) count = 0 end
  end
-
- e=#arg -- exit
- stop = true
- local s = 1
-
- if arg[1]=="-a" then s=2 stop=nil end
-
- for i=s,#arg do -- maybe cleanname or trim /?
-  if which(arg[i]) then e = e - 1 end
- end
-
- if e>0 then
-  if e==#arg then e=2
-  else e=1 end
- end
-
 end
 
-os.exit(e)
+os.exit(count)
