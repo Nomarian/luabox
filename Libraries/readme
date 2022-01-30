@@ -1,0 +1,4 @@
+
+These libraries mimic unix functionality
+
+They don't print, instead they return a table, and args are also a table
